@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -30,9 +28,6 @@ var moduleCmd = &cobra.Command{
 	Use:   "module create|update|delete|list [ARGS]",
 	Short: "create, update, delete and list modules",
 	Long:  moduleLong,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("module called")
-	},
 }
 
 func init() {

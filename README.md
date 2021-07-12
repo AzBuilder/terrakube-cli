@@ -1,6 +1,8 @@
 # AZB CLI
 `azb` is AZB Server on the command line. It brings organizations, workspaces and other AZB concepts to the terminal.
 
+<img src='https://svgshare.com/i/Z3P.svg' title='AZB CLI' />
+
 ## Documentation
 
 [See the manual][manual] for setup and usage instructions.
@@ -19,7 +21,7 @@ If anything feels off, or if you feel that some functionality is missing, please
 
 | Install:          | Upgrade:          |
 | ----------------- | ----------------- |
-| `brew install azb` | `brew upgrade azb` |
+| `brew install azbuilder/cli/azb` | `brew upgrade azb` |
 
 
 ### Linux
@@ -42,7 +44,7 @@ Download packaged binaries from the [releases page][].
 
 ### Build from source
 
-See here on how to [build GitHub CLI from source][build from source].
+See here on how to [build AZB CLI from source][build from source].
 
 [manual]: https://google.com
 [Homebrew]: https://brew.sh
