@@ -16,19 +16,63 @@ limitations under the License.
 package cmd
 
 import (
+	"azb/client/client/organization"
+	"azb/client/models"
+	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 )
 
+var OrganizationCreateExample string = `Create a new organization
+    %[1]v organization create -n myorg -d "org description" `
+
+var OrganizationCreateName string
+var OrganizationCreateDescription string
 var createOrganizationCmd = &cobra.Command{
 	Use:   "create",
 	Short: "create an organization",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("organization created")
+		createOrganization()
 	},
+	Example: fmt.Sprintf(OrganizationCreateExample, rootCmd.Use),
 }
 
 func init() {
 	organizationCmd.AddCommand(createOrganizationCmd)
+	createOrganizationCmd.Flags().StringVarP(&OrganizationCreateName, "name", "n", "", "Name of the new organization (required)")
+	createOrganizationCmd.MarkFlagRequired("name")
+	createOrganizationCmd.Flags().StringVarP(&OrganizationCreateDescription, "description", "d", "", "Description of the new organization")
+
+}
+
+func createOrganization() {
+	client := newClient()
+
+	organizationBody := organization.PostOrganizationBody{
+		Data: &models.Organization{
+			Attributes: &models.OrganizationAttributes{
+				Description: OrganizationCreateDescription,
+				Name:        OrganizationCreateName,
+			},
+			Type: "organization",
+		},
+	}
+
+	organizationParams := organization.NewPostOrganizationParams().WithOrganization(organizationBody)
+	resp, err := client.Organization.PostOrganization(organizationParams)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	prettyJSON, err := json.MarshalIndent(resp.Payload.Data, "", "    ")
+	if err != nil {
+		log.Fatal("Failed to generate json", err)
+	}
+
+	fmt.Printf("%s\n", string(prettyJSON))
+
 }
