@@ -52,11 +52,22 @@ var loginCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(loginCmd)
 	loginCmd.Flags().StringVarP(&Server, "server", "s", "", "AZB Server url (required)")
+<<<<<<< HEAD
+	_ = loginCmd.MarkFlagRequired("server")
+	loginCmd.Flags().StringVarP(&ClientID, "client-id", "c", "", "Azure application Client id (required)")
+	_ = loginCmd.MarkFlagRequired("client-id")
+	loginCmd.Flags().StringVarP(&TenantID, "tenant-id", "t", "", "Azure tenant Id (required)")
+	_ = loginCmd.MarkFlagRequired("tenant-id")
+=======
+	//lint:ignore
 	loginCmd.MarkFlagRequired("server")
 	loginCmd.Flags().StringVarP(&ClientID, "client-id", "c", "", "Azure application Client id (required)")
+	//lint:ignore
 	loginCmd.MarkFlagRequired("client-id")
 	loginCmd.Flags().StringVarP(&TenantID, "tenant-id", "t", "", "Azure tenant Id (required)")
+	//lint:ignore
 	loginCmd.MarkFlagRequired("tenant-id")
+>>>>>>> bf3c7991b9958288281f167626fcb5fcdb065b91
 }
 
 func acquireAccessToken(clientID string, tenantID string, url string) {

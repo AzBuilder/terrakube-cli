@@ -42,7 +42,12 @@ var OrganizationUpdateName string
 func init() {
 	organizationCmd.AddCommand(updateOrganizationCmd)
 	updateOrganizationCmd.Flags().StringVarP(&OrganizationId, "id", "", "", "Id of the organization (required)")
+<<<<<<< HEAD
+	_ = updateOrganizationCmd.MarkFlagRequired("id")
+=======
+	//lint:ignore
 	updateOrganizationCmd.MarkFlagRequired("id")
+>>>>>>> bf3c7991b9958288281f167626fcb5fcdb065b91
 	updateOrganizationCmd.Flags().StringVarP(&OrganizationUpdateName, "name", "n", "", "Name of the organization")
 	updateOrganizationCmd.Flags().StringVarP(&OrganizationUpdateDescription, "description", "d", "", "Description of the organization")
 }
