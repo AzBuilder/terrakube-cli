@@ -38,12 +38,7 @@ var deleteOrganizationCmd = &cobra.Command{
 func init() {
 	organizationCmd.AddCommand(deleteOrganizationCmd)
 	deleteOrganizationCmd.Flags().StringVarP(&OrganizationDeleteId, "id", "", "", "Id of the organization (required)")
-<<<<<<< HEAD
 	_ = deleteOrganizationCmd.MarkFlagRequired("id")
-=======
-	//lint:ignore
-	deleteOrganizationCmd.MarkFlagRequired("id")
->>>>>>> bf3c7991b9958288281f167626fcb5fcdb065b91
 }
 
 func deleteOrganization() {

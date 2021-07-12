@@ -42,14 +42,8 @@ var createOrganizationCmd = &cobra.Command{
 func init() {
 	organizationCmd.AddCommand(createOrganizationCmd)
 	createOrganizationCmd.Flags().StringVarP(&OrganizationCreateName, "name", "n", "", "Name of the new organization (required)")
-<<<<<<< HEAD
 	_ = createOrganizationCmd.MarkFlagRequired("name")
-=======
-	//lint:ignore
-	createOrganizationCmd.MarkFlagRequired("name")
->>>>>>> bf3c7991b9958288281f167626fcb5fcdb065b91
 	createOrganizationCmd.Flags().StringVarP(&OrganizationCreateDescription, "description", "d", "", "Description of the new organization")
-
 }
 
 func createOrganization() {
