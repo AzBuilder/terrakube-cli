@@ -1,18 +1,3 @@
-/*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package cmd
 
 import (
@@ -21,14 +6,37 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var WorkspaceDeleteExample string = `Delete a workspace
+    %[1]v workspace delete --organization-id e5ad0642-f9b3-48b3-9bf4-35997febe1fb --id 38b6635a-d38e-46f2-a95e-d00a416de4fd `
+
+var WorkspaceDeleteId string
+var WorkspaceDeleteOrgId string
 var deleteWorkspaceCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "delete a workspace",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("workspace deleted")
+		deleteWorkspace()
 	},
+	Example: fmt.Sprintf(WorkspaceDeleteExample, rootCmd.Use),
 }
 
 func init() {
 	workspaceCmd.AddCommand(deleteWorkspaceCmd)
+	deleteWorkspaceCmd.Flags().StringVarP(&WorkspaceDeleteOrgId, "organization-id", "", "", "Organization Id (required)")
+	_ = deleteWorkspaceCmd.MarkFlagRequired("organization-id")
+	deleteWorkspaceCmd.Flags().StringVarP(&WorkspaceDeleteId, "id", "", "", "Id of the workspace (required)")
+	_ = deleteWorkspaceCmd.MarkFlagRequired("id")
+}
+
+func deleteWorkspace() {
+	client := newClient()
+
+	err := client.Workspace.Delete(WorkspaceDeleteOrgId, WorkspaceDeleteId)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Printf("deleted")
 }

@@ -1,34 +1,49 @@
-/*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 )
+
+var ModuleFilter string
+var ModuleOrgId string
+var ModuleListExample string = `List all existing modules
+    %[1]v module list --organization-id e5ad0642-f9b3-48b3-9bf4-35997febe1fb
+List specific organizations applying a filter
+    %[1]v module list --organization-id e5ad0642-f9b3-48b3-9bf4-35997febe1fb --filter name==mymodule `
 
 var listModulesCmd = &cobra.Command{
 	Use:   "list",
 	Short: "list modules",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list of modules")
+		listModules()
 	},
+	Example: fmt.Sprintf(ModuleListExample, rootCmd.Use),
 }
 
 func init() {
 	moduleCmd.AddCommand(listModulesCmd)
+	listModulesCmd.Flags().StringVarP(&ModuleFilter, "filter", "f", "", "Filter")
+	listModulesCmd.Flags().StringVarP(&ModuleOrgId, "organization-id", "", "", "Organization Id (required)")
+	_ = listModulesCmd.MarkFlagRequired("organization-id")
+}
+
+func listModules() {
+	client := newClient()
+	resp, err := client.Module.List(ModuleOrgId, ModuleFilter)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	prettyJSON, err := json.MarshalIndent(resp, "", "    ")
+	if err != nil {
+		log.Fatal("Failed to generate json", err)
+	}
+
+	fmt.Printf("%s\n", string(prettyJSON))
 }

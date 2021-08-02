@@ -28,10 +28,8 @@ import (
 	"github.com/spf13/viper"
 
 	apiclient "azb/client/client"
-
-	"github.com/go-openapi/runtime"
-	httptransport "github.com/go-openapi/runtime/client"
-	"github.com/go-openapi/strfmt"
+	"net/http"
+	neturl "net/url"
 )
 
 var cfgFile string
@@ -95,7 +93,7 @@ func initConfig() {
 	}
 }
 
-func newClient() *apiclient.Azb {
+func newClient() apiclient.Client {
 	home, err := homedir.Dir()
 	cobra.CheckErr(err)
 	viper.AddConfigPath(home)
@@ -107,10 +105,10 @@ func newClient() *apiclient.Azb {
 	}
 	url := viper.Get("Server").(string)
 	token := viper.Get("Token").(string)
-	r := httptransport.New(url, apiclient.DefaultBasePath, apiclient.DefaultSchemes)
-	r.DefaultAuthentication = httptransport.BearerToken(token)
-	r.Producers["application/vnd.api+json"] = runtime.JSONProducer()
-	r.Consumers["application/vnd.api+json"] = runtime.JSONConsumer()
-	client := apiclient.New(r, strfmt.Default)
-	return client
+	baseUrl := &neturl.URL{
+		Scheme: "http",
+		Host:   url,
+	}
+	client := apiclient.NewClient(&http.Client{}, token, baseUrl)
+	return *client
 }

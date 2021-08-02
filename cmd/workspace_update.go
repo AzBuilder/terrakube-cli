@@ -1,34 +1,62 @@
-/*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package cmd
 
 import (
+	"azb/client/models"
 	"fmt"
 
 	"github.com/spf13/cobra"
 )
 
+var WorkspaceUpdateExample string = `Update Terraform version in workspace
+    %[1]v workspace update --organization-id 312b4415-806b-47a9-9452-b71f0753136e --id 38b6635a-d38e-46f2-a95e-d00a416de4fd -t 0.14.0 `
+
+var WorkspaceUpdateName string
+var WorkspaceUpdateSource string
+var WorkspaceUpdateBranch string
+var WorkspaceUpdateTerraformV string
+var WorkspaceUpdateOrgId string
+var WorkspaceUpdateId string
+
 var updateWorkspaceCmd = &cobra.Command{
 	Use:   "update",
 	Short: "update a workspace",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("workspace updated")
+		updateWorkspace()
 	},
+	Example: fmt.Sprintf(WorkspaceUpdateExample, rootCmd.Use),
 }
 
 func init() {
 	workspaceCmd.AddCommand(updateWorkspaceCmd)
+	updateWorkspaceCmd.Flags().StringVarP(&WorkspaceUpdateName, "name", "n", "", "Name of the workspace (required)")
+	updateWorkspaceCmd.Flags().StringVarP(&WorkspaceUpdateOrgId, "organization-id", "", "", "Id of the organization (required)")
+	_ = updateWorkspaceCmd.MarkFlagRequired("organization-id")
+	updateWorkspaceCmd.Flags().StringVarP(&WorkspaceUpdateId, "id", "", "", "Id of the workspace (required)")
+	_ = updateWorkspaceCmd.MarkFlagRequired("id")
+	updateWorkspaceCmd.Flags().StringVarP(&WorkspaceUpdateBranch, "branch", "b", "", "Branch of the workspace")
+	updateWorkspaceCmd.Flags().StringVarP(&WorkspaceUpdateSource, "source", "s", "", "Source of the workspace")
+	updateWorkspaceCmd.Flags().StringVarP(&WorkspaceUpdateTerraformV, "terraform-version", "t", "", "Terraform Version use in the workspace")
+}
+
+func updateWorkspace() {
+	client := newClient()
+
+	workspace := models.Workspace{
+		Attributes: &models.WorkspaceAttributes{
+			Name:             WorkspaceUpdateName,
+			Branch:           WorkspaceUpdateBranch,
+			Source:           WorkspaceUpdateSource,
+			TerraformVersion: WorkspaceUpdateTerraformV,
+		},
+		Type: "workspace",
+	}
+
+	err := client.Workspace.Update(WorkspaceUpdateOrgId, workspace)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Printf("Updated")
 }

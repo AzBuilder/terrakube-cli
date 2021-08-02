@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -27,12 +25,9 @@ It can be used to create, update, delete and list jobs.
 `
 
 var jobCmd = &cobra.Command{
-	Use:   "job create|update|delete|list [ARGS]",
-	Short: "create, update, delete and list jobs",
+	Use:   "job create|list [ARGS]",
+	Short: "create and list jobs",
 	Long:  jobLong,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("job called")
-	},
 }
 
 func init() {
