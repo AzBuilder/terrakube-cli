@@ -16,7 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"azb/client/client/organization"
 	"azb/client/models"
 	"encoding/json"
 	"fmt"
@@ -49,25 +48,21 @@ func init() {
 func createOrganization() {
 	client := newClient()
 
-	organizationBody := organization.PostOrganizationBody{
-		Data: &models.Organization{
-			Attributes: &models.OrganizationAttributes{
-				Description: OrganizationCreateDescription,
-				Name:        OrganizationCreateName,
-			},
-			Type: "organization",
+	organization := models.Organization{
+		Attributes: &models.OrganizationAttributes{
+			Name:        OrganizationCreateName,
+			Description: OrganizationCreateDescription,
 		},
+		Type: "organization",
 	}
-
-	organizationParams := organization.NewPostOrganizationParams().WithOrganization(organizationBody)
-	resp, err := client.Organization.PostOrganization(organizationParams)
+	resp, err := client.Organization.Create(organization)
 
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	prettyJSON, err := json.MarshalIndent(resp.Payload.Data, "", "    ")
+	prettyJSON, err := json.MarshalIndent(resp, "", "    ")
 	if err != nil {
 		log.Fatal("Failed to generate json", err)
 	}

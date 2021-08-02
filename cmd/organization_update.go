@@ -16,7 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"azb/client/client/organization"
 	"azb/client/models"
 	"fmt"
 
@@ -50,17 +49,15 @@ func init() {
 func updateOrganization() {
 	client := newClient()
 
-	organizationBody := organization.PatchOrganizationOrganizationIDBody{
-		Data: &models.Organization{
-			Attributes: &models.OrganizationAttributes{
-				Name:        OrganizationUpdateName,
-				Description: OrganizationUpdateDescription,
-			},
-			ID:   OrganizationId,
-			Type: "organization",
+	organization := models.Organization{
+		Attributes: &models.OrganizationAttributes{
+			Name:        OrganizationUpdateName,
+			Description: OrganizationUpdateDescription,
 		},
+		Type: "organization",
+		ID:   OrganizationId,
 	}
-	_, err := client.Organization.PatchOrganizationOrganizationID(organization.NewPatchOrganizationOrganizationIDParams().WithOrganization(organizationBody).WithOrganizationID(OrganizationId))
+	err := client.Organization.Update(organization)
 
 	if err != nil {
 		fmt.Println(err)
