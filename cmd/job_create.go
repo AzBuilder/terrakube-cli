@@ -20,7 +20,7 @@ var createJobCmd = &cobra.Command{
 	Use:   "create",
 	Short: "create a job",
 	Run: func(cmd *cobra.Command, args []string) {
-		createModule()
+		createJob()
 	},
 	Example: fmt.Sprintf(JobCreateExample, rootCmd.Use),
 }
