@@ -40,10 +40,5 @@ func listModules() {
 		return
 	}
 
-	prettyJSON, err := json.MarshalIndent(resp, "", "    ")
-	if err != nil {
-		log.Fatal("Failed to generate json", err)
-	}
-
-	fmt.Printf("%s\n", string(prettyJSON))
+	renderOutput(resp, output)
 }

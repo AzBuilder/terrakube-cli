@@ -37,6 +37,4 @@ func deleteWorkspace() {
 		fmt.Println(err)
 		return
 	}
-
-	fmt.Printf("deleted")
 }
