@@ -22,9 +22,17 @@ jobs:
         goos: ${{ matrix.goos }}
         goarch: ${{ matrix.goarch }}
         binary_name: "azb"
-    - uses: dawidd6/action-homebrew-bump-formula@v3
-      with:
-        token: ${{secrets.TOKEN}}
-        tap: azbuilder/homebrew-cli
-        formula: azb
-        tag: ${{ github.event.release.tag_name }}
+  homebrew:
+    needs: releases-matrix
+    name: Bump Homebrew formula
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mislav/bump-homebrew-formula-action@v1
+        with:
+          formula-name: azb
+          homebrew-tap: azbuilder/homebrew-cli
+          download-url: https://github.com/azbuilder/azb-cli/releases/download/${{ github.event.release.tag_name }}/azb-${{ github.event.release.tag_name }}-darwin-amd64.tar.gz
+          commit-message: |
+            Updated {{formulaName}} to {{version}}
+        env:
+          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_TOKEN }}
