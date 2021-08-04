@@ -3,7 +3,6 @@ package cmd
 import (
 	"azb/client/models"
 	"fmt"
-	"log"
 
 	"github.com/spf13/cobra"
 )
