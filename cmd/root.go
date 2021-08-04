@@ -1,27 +1,16 @@
-/*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"os"
+	"reflect"
 	"regexp"
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/kataras/tablewriter"
 	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
@@ -33,6 +22,7 @@ import (
 )
 
 var cfgFile string
+var output string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -53,6 +43,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.azb-cli.yaml)")
+	rootCmd.PersistentFlags().StringVar(&output, "output", "json", "Use json, table, tsv or none to format CLI output")
 
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
@@ -111,4 +102,73 @@ func newClient() apiclient.Client {
 	}
 	client := apiclient.NewClient(&http.Client{}, token, baseUrl)
 	return *client
+}
+
+func renderOutput(result interface{}, format string) {
+	switch {
+	case format == "json":
+		printJSON, err := json.MarshalIndent(result, "", "    ")
+		if err != nil {
+			log.Fatal("Failed to generate json", err)
+		}
+		fmt.Printf("%s\n", string(printJSON))
+	case format == "tsv":
+		data, _ := splitInterface(result)
+		for _, v := range data {
+			fmt.Println(strings.Join(v[:], "\t"))
+		}
+	case format == "table":
+		data, header := splitInterface(result)
+		if len(data) > 0 {
+			table := tablewriter.NewWriter(os.Stdout)
+			table.AppendBulk(data)
+			table.SetHeader(header)
+			table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+			table.SetCaption(true, " ")
+			table.SetCenterSeparator("|")
+			table.Render()
+		}
+	case format == "none":
+
+	}
+}
+
+func splitInterface(input interface{}) ([][]string, []string) {
+	reflectData := reflect.ValueOf(input)
+	headers := make([]string, 0)
+	headers = append(headers, "ID")
+	result := make([][]string, 0)
+	if reflectData.Kind() == reflect.Slice {
+		for i := 0; i < reflectData.Len(); i++ {
+			data := reflectData.Index(i).Interface()
+			d := reflect.Indirect(reflect.ValueOf(data))
+
+			row := make([]string, 0)
+			id := d.FieldByName("ID").String()
+			row = append(row, id)
+
+			attr := reflect.Indirect(reflect.ValueOf(d.FieldByName("Attributes").Interface()))
+			for j := 0; j < attr.NumField(); j++ {
+				if i == 0 {
+					headers = append(headers, attr.Type().Field(j).Name)
+				}
+				row = append(row, attr.Field(j).String())
+			}
+			result = append(result, row)
+		}
+	} else {
+		d := reflect.Indirect(reflectData)
+		row := make([]string, 0)
+		id := d.FieldByName("ID").String()
+		row = append(row, id)
+
+		attr := reflect.Indirect(reflect.ValueOf(d.FieldByName("Attributes").Interface()))
+		for j := 0; j < attr.NumField(); j++ {
+			headers = append(headers, attr.Type().Field(j).Name)
+			row = append(row, attr.Field(j).String())
+		}
+		result = append(result, row)
+
+	}
+	return result, headers
 }

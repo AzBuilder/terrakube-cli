@@ -34,6 +34,4 @@ func deleteOrganization() {
 		fmt.Println(err)
 		return
 	}
-
-	fmt.Printf("deleted")
 }

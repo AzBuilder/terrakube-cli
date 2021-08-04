@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -37,10 +35,5 @@ func listOrganizations() {
 		return
 	}
 
-	prettyJSON, err := json.MarshalIndent(organizations, "", "    ")
-	if err != nil {
-		log.Fatal("Failed to generate json", err)
-	}
-
-	fmt.Printf("%s\n", string(prettyJSON))
+	renderOutput(organizations, output)
 }

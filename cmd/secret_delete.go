@@ -41,6 +41,4 @@ func deleteSecret() {
 		fmt.Println(err)
 		return
 	}
-
-	fmt.Printf("deleted")
 }

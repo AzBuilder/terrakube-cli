@@ -41,6 +41,4 @@ func deleteVariable() {
 		fmt.Println(err)
 		return
 	}
-
-	fmt.Printf("deleted")
 }
