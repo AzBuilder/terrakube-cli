@@ -42,17 +42,17 @@ func init() {
 	rootCmd.AddCommand(loginCmd)
 	loginCmd.Flags().StringVarP(&Server, "server", "s", "", "AZB Server url (required)")
 	_ = loginCmd.MarkFlagRequired("server")
-	viper.BindEnv("server")
+	_ = viper.BindEnv("server")
 	loginCmd.Flags().StringVarP(&ClientID, "client-id", "c", "", "Azure application Client id (required)")
 	_ = loginCmd.MarkFlagRequired("client-id")
-	viper.BindEnv("client-id", "AZB_CLIENT_ID")
+	_ = viper.BindEnv("client-id", "AZB_CLIENT_ID")
 	loginCmd.Flags().StringVarP(&TenantID, "tenant-id", "t", "", "Azure tenant Id (required)")
 	_ = loginCmd.MarkFlagRequired("tenant-id")
-	viper.BindEnv("tenant-id", "AZB_TENANT_ID")
+	_ = viper.BindEnv("tenant-id", "AZB_TENANT_ID")
 	loginCmd.Flags().StringVarP(&Path, "path", "p", "", "AZB Server path")
-	viper.BindEnv("path")
+	_ = viper.BindEnv("path")
 	loginCmd.Flags().StringVarP(&Scheme, "scheme", "", "http", "AZB Server scheme: http or https")
-	viper.BindEnv("scheme")
+	_ = viper.BindEnv("scheme")
 }
 
 func acquireAccessToken(clientID string, tenantID string, url string, scheme string, path string) {

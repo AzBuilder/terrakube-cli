@@ -46,8 +46,8 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.azb-cli.yaml)")
 	rootCmd.PersistentFlags().StringVar(&output, "output", "json", "Use json, table, tsv or none to format CLI output")
-	viper.BindPFlag("output", rootCmd.Flags().Lookup("output"))
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	_ = viper.BindPFlag("output", rootCmd.Flags().Lookup("output"))
+	_ = rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	cobra.AddTemplateFunc("StyleHeading", color.New(color.FgCyan).SprintFunc())
 	usageTemplate := rootCmd.UsageTemplate()
@@ -78,7 +78,7 @@ func initConfig() {
 	}
 
 	viper.SetEnvPrefix(envPrefix)
-	viper.BindEnv("workspace-id", "AZB_WORKSPACE_ID")
+	_ = viper.BindEnv("workspace-id", "AZB_WORKSPACE_ID")
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
