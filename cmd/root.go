@@ -195,7 +195,7 @@ func presetRequiredFlags(cmd *cobra.Command) {
 	_ = viper.BindPFlags(cmd.Flags())
 	cmd.Flags().VisitAll(func(f *pflag.Flag) {
 		if viper.IsSet(f.Name) && viper.GetString(f.Name) != "" {
-			cmd.Flags().Set(f.Name, viper.GetString(f.Name))
+			_ = cmd.Flags().Set(f.Name, viper.GetString(f.Name))
 		}
 	})
 }
