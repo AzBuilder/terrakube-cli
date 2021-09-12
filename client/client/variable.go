@@ -11,7 +11,7 @@ type VariableClient struct {
 }
 
 func (c *VariableClient) List(organizationId string, workspaceId string, filter string) ([]*models.Variable, error) {
-	req, err := c.Client.newRequest(http.MethodGet, basePath+fmt.Sprintf("organization/%v/workspace/%v/variable", organizationId, workspaceId), nil)
+	req, err := c.Client.newRequest(http.MethodGet, fmt.Sprintf("organization/%v/workspace/%v/variable", organizationId, workspaceId), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func (c *VariableClient) Create(organizationId string, workspaceId string, varia
 		Data: &variable,
 	}
 
-	req, err := c.Client.newRequest(http.MethodPost, basePath+fmt.Sprintf("organization/%v/workspace/%v/variable", organizationId, workspaceId), reqBody)
+	req, err := c.Client.newRequest(http.MethodPost, fmt.Sprintf("organization/%v/workspace/%v/variable", organizationId, workspaceId), reqBody)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (c *VariableClient) Create(organizationId string, workspaceId string, varia
 }
 
 func (c *VariableClient) Delete(organizationId string, workspaceId string, variableId string) error {
-	req, err := c.Client.newRequest(http.MethodDelete, fmt.Sprintf(basePath+"organization/%v/workspace/%v/variable/%v", organizationId, workspaceId, variableId), nil)
+	req, err := c.Client.newRequest(http.MethodDelete, fmt.Sprintf("organization/%v/workspace/%v/variable/%v", organizationId, workspaceId, variableId), nil)
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (c *VariableClient) Update(organizationId string, workspaceId string, varia
 		Data: &variable,
 	}
 
-	req, err := c.Client.newRequest(http.MethodPatch, fmt.Sprintf(basePath+"organization/%v/workspace/%v/variable/%v", organizationId, workspaceId, variable.ID), reqBody)
+	req, err := c.Client.newRequest(http.MethodPatch, fmt.Sprintf("organization/%v/workspace/%v/variable/%v", organizationId, workspaceId, variable.ID), reqBody)
 	if err != nil {
 		return err
 	}

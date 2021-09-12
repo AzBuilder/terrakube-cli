@@ -3,7 +3,6 @@ package client
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -22,12 +21,13 @@ type Client struct {
 	Job          *JobClient
 	Environment  *EnvironmentClient
 	HttpClient   *http.Client
+	BasePath     string
 }
 
-const basePath = "/api/v1/"
+var defaultPath string = "/api/v1/"
 
 func (c *Client) newRequest(method, path string, body interface{}) (*http.Request, error) {
-	rel := &url.URL{Path: path}
+	rel := &url.URL{Path: c.BasePath + path}
 	u := c.BaseURL.ResolveReference(rel)
 	var buf io.ReadWriter
 	if body != nil {
@@ -58,8 +58,6 @@ func (c *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
 		err = json.NewDecoder(resp.Body).Decode(v)
 	}
 
-	fmt.Println(resp.StatusCode)
-
 	return resp, err
 }
 
@@ -67,6 +65,7 @@ func NewClient(httpClient *http.Client, token string, baseUrl *url.URL) *Client 
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
+
 	c := &Client{HttpClient: httpClient}
 	c.BaseURL = baseUrl
 	c.Token = token
@@ -77,5 +76,6 @@ func NewClient(httpClient *http.Client, token string, baseUrl *url.URL) *Client 
 	c.Environment = &EnvironmentClient{Client: c}
 	c.Secret = &SecretClient{Client: c}
 	c.Job = &JobClient{Client: c}
+	c.BasePath = baseUrl.Path + defaultPath
 	return c
 }

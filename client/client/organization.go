@@ -11,7 +11,7 @@ type OrganizationClient struct {
 }
 
 func (c *OrganizationClient) List(filter string) ([]*models.Organization, error) {
-	req, err := c.Client.newRequest(http.MethodGet, basePath+"organization", nil)
+	req, err := c.Client.newRequest(http.MethodGet, "organization", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func (c *OrganizationClient) Create(organization models.Organization) (*models.O
 		Data: &organization,
 	}
 
-	req, err := c.Client.newRequest(http.MethodPost, basePath+"organization", reqBody)
+	req, err := c.Client.newRequest(http.MethodPost, "organization", reqBody)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (c *OrganizationClient) Create(organization models.Organization) (*models.O
 }
 
 func (c *OrganizationClient) Delete(organizationID string) error {
-	req, err := c.Client.newRequest(http.MethodDelete, fmt.Sprintf(basePath+"organization/%v", organizationID), nil)
+	req, err := c.Client.newRequest(http.MethodDelete, fmt.Sprintf("organization/%v", organizationID), nil)
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (c *OrganizationClient) Update(organization models.Organization) error {
 		Data: &organization,
 	}
 
-	req, err := c.Client.newRequest(http.MethodPatch, fmt.Sprintf(basePath+"organization/%v", organization.ID), reqBody)
+	req, err := c.Client.newRequest(http.MethodPatch, fmt.Sprintf("organization/%v", organization.ID), reqBody)
 	if err != nil {
 		return err
 	}

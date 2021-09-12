@@ -11,7 +11,7 @@ type WorkspaceClient struct {
 }
 
 func (c *WorkspaceClient) List(organizationId string, filter string) ([]*models.Workspace, error) {
-	req, err := c.Client.newRequest(http.MethodGet, basePath+fmt.Sprintf("organization/%v/workspace", organizationId), nil)
+	req, err := c.Client.newRequest(http.MethodGet, fmt.Sprintf("organization/%v/workspace", organizationId), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func (c *WorkspaceClient) Create(organizationId string, workspace models.Workspa
 		Data: &workspace,
 	}
 
-	req, err := c.Client.newRequest(http.MethodPost, basePath+fmt.Sprintf("organization/%v/workspace", organizationId), reqBody)
+	req, err := c.Client.newRequest(http.MethodPost, fmt.Sprintf("organization/%v/workspace", organizationId), reqBody)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (c *WorkspaceClient) Create(organizationId string, workspace models.Workspa
 }
 
 func (c *WorkspaceClient) Delete(organizationID string, workspaceId string) error {
-	req, err := c.Client.newRequest(http.MethodDelete, fmt.Sprintf(basePath+"organization/%v/workspace/%v", organizationID, workspaceId), nil)
+	req, err := c.Client.newRequest(http.MethodDelete, fmt.Sprintf("organization/%v/workspace/%v", organizationID, workspaceId), nil)
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (c *WorkspaceClient) Update(organizationId string, workspace models.Workspa
 		Data: &workspace,
 	}
 
-	req, err := c.Client.newRequest(http.MethodPatch, fmt.Sprintf(basePath+"organization/%v/workspace/%v", organizationId, workspace.ID), reqBody)
+	req, err := c.Client.newRequest(http.MethodPatch, fmt.Sprintf("organization/%v/workspace/%v", organizationId, workspace.ID), reqBody)
 	if err != nil {
 		return err
 	}

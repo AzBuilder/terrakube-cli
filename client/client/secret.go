@@ -11,7 +11,7 @@ type SecretClient struct {
 }
 
 func (c *SecretClient) List(organizationId string, workspaceId string, filter string) ([]*models.Secret, error) {
-	req, err := c.Client.newRequest(http.MethodGet, basePath+fmt.Sprintf("organization/%v/workspace/%v/secret", organizationId, workspaceId), nil)
+	req, err := c.Client.newRequest(http.MethodGet, fmt.Sprintf("organization/%v/workspace/%v/secret", organizationId, workspaceId), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func (c *SecretClient) Create(organizationId string, workspaceId string, secret 
 		Data: &secret,
 	}
 
-	req, err := c.Client.newRequest(http.MethodPost, basePath+fmt.Sprintf("organization/%v/workspace/%v/secret", organizationId, workspaceId), reqBody)
+	req, err := c.Client.newRequest(http.MethodPost, fmt.Sprintf("organization/%v/workspace/%v/secret", organizationId, workspaceId), reqBody)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (c *SecretClient) Create(organizationId string, workspaceId string, secret 
 }
 
 func (c *SecretClient) Delete(organizationId string, workspaceId string, secretId string) error {
-	req, err := c.Client.newRequest(http.MethodDelete, fmt.Sprintf(basePath+"organization/%v/workspace/%v/secret/%v", organizationId, workspaceId, secretId), nil)
+	req, err := c.Client.newRequest(http.MethodDelete, fmt.Sprintf("organization/%v/workspace/%v/secret/%v", organizationId, workspaceId, secretId), nil)
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (c *SecretClient) Update(organizationId string, workspaceId string, secret 
 		Data: &secret,
 	}
 
-	req, err := c.Client.newRequest(http.MethodPatch, fmt.Sprintf(basePath+"organization/%v/workspace/%v/secret/%v", organizationId, workspaceId, secret.ID), reqBody)
+	req, err := c.Client.newRequest(http.MethodPatch, fmt.Sprintf("organization/%v/workspace/%v/secret/%v", organizationId, workspaceId, secret.ID), reqBody)
 	if err != nil {
 		return err
 	}

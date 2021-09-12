@@ -11,7 +11,7 @@ type EnvironmentClient struct {
 }
 
 func (c *EnvironmentClient) List(organizationId string, workspaceId string, filter string) ([]*models.Environment, error) {
-	req, err := c.Client.newRequest(http.MethodGet, basePath+fmt.Sprintf("organization/%v/workspace/%v/environment", organizationId, workspaceId), nil)
+	req, err := c.Client.newRequest(http.MethodGet, fmt.Sprintf("organization/%v/workspace/%v/environment", organizationId, workspaceId), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func (c *EnvironmentClient) Create(organizationId string, workspaceId string, en
 		Data: &environment,
 	}
 
-	req, err := c.Client.newRequest(http.MethodPost, basePath+fmt.Sprintf("organization/%v/workspace/%v/environment", organizationId, workspaceId), reqBody)
+	req, err := c.Client.newRequest(http.MethodPost, fmt.Sprintf("organization/%v/workspace/%v/environment", organizationId, workspaceId), reqBody)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (c *EnvironmentClient) Create(organizationId string, workspaceId string, en
 }
 
 func (c *EnvironmentClient) Delete(organizationId string, workspaceId string, environmentId string) error {
-	req, err := c.Client.newRequest(http.MethodDelete, fmt.Sprintf(basePath+"organization/%v/workspace/%v/environment/%v", organizationId, workspaceId, environmentId), nil)
+	req, err := c.Client.newRequest(http.MethodDelete, fmt.Sprintf("organization/%v/workspace/%v/environment/%v", organizationId, workspaceId, environmentId), nil)
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (c *EnvironmentClient) Update(organizationId string, workspaceId string, en
 		Data: &environment,
 	}
 
-	req, err := c.Client.newRequest(http.MethodPatch, fmt.Sprintf(basePath+"organization/%v/workspace/%v/environment/%v", organizationId, workspaceId, environment.ID), reqBody)
+	req, err := c.Client.newRequest(http.MethodPatch, fmt.Sprintf("organization/%v/workspace/%v/environment/%v", organizationId, workspaceId, environment.ID), reqBody)
 	if err != nil {
 		return err
 	}
