@@ -62,6 +62,12 @@ type JobRelationshipsOrganization struct {
 
 type JobRelationshipsWorkspace struct {
 
+	// data
+	Data *JobRelationshipsWorkspaceData `json:"data"`
+}
+
+type JobRelationshipsWorkspaceData struct {
+
 	// id
 	ID string `json:"id,omitempty"`
 

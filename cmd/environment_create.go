@@ -2,9 +2,7 @@ package cmd
 
 import (
 	"azb/client/models"
-	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -56,11 +54,5 @@ func createEnvironment() {
 		return
 	}
 
-	prettyJSON, err := json.MarshalIndent(resp, "", "    ")
-	if err != nil {
-		log.Fatal("Failed to generate json", err)
-	}
-
-	fmt.Printf("%s\n", string(prettyJSON))
-
+	renderOutput(resp, output)
 }

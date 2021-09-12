@@ -1,24 +1,11 @@
-/*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package cmd
 
 import (
 	"context"
 	"fmt"
 	"time"
+
+	"github.com/fatih/color"
 
 	"github.com/AzureAD/microsoft-authentication-library-for-go/apps/public"
 	homedir "github.com/mitchellh/go-homedir"
@@ -38,13 +25,15 @@ Login to a local azb server
 var Server string
 var ClientID string
 var TenantID string
+var Path string
+var Scheme string
 
 var loginCmd = &cobra.Command{
 	Use:   "login",
 	Short: "login to azb server",
 	Long:  loginLong,
 	Run: func(cmd *cobra.Command, args []string) {
-		acquireAccessToken(ClientID, TenantID, Server)
+		acquireAccessToken(ClientID, TenantID, Server, Scheme, Path)
 	},
 	Example: fmt.Sprintf(loginExamples, rootCmd.Use),
 }
@@ -53,13 +42,20 @@ func init() {
 	rootCmd.AddCommand(loginCmd)
 	loginCmd.Flags().StringVarP(&Server, "server", "s", "", "AZB Server url (required)")
 	_ = loginCmd.MarkFlagRequired("server")
+	_ = viper.BindEnv("server")
 	loginCmd.Flags().StringVarP(&ClientID, "client-id", "c", "", "Azure application Client id (required)")
 	_ = loginCmd.MarkFlagRequired("client-id")
+	_ = viper.BindEnv("client-id", "AZB_CLIENT_ID")
 	loginCmd.Flags().StringVarP(&TenantID, "tenant-id", "t", "", "Azure tenant Id (required)")
 	_ = loginCmd.MarkFlagRequired("tenant-id")
+	_ = viper.BindEnv("tenant-id", "AZB_TENANT_ID")
+	loginCmd.Flags().StringVarP(&Path, "path", "p", "", "AZB Server path")
+	_ = viper.BindEnv("path")
+	loginCmd.Flags().StringVarP(&Scheme, "scheme", "", "http", "AZB Server scheme: http or https")
+	_ = viper.BindEnv("scheme")
 }
 
-func acquireAccessToken(clientID string, tenantID string, url string) {
+func acquireAccessToken(clientID string, tenantID string, url string, scheme string, path string) {
 
 	app, err := public.New(clientID, public.WithAuthority(fmt.Sprintf("https://login.microsoftonline.com/%v", tenantID)))
 	if err != nil {
@@ -72,7 +68,7 @@ func acquireAccessToken(clientID string, tenantID string, url string) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf(devCode.Result.Message)
+	color.Yellow(devCode.Result.Message)
 	result, err := devCode.AuthenticationResult(ctx)
 	if err != nil {
 		panic(fmt.Sprintf("got error while waiting for user to input the device code: %s", err))
@@ -82,8 +78,9 @@ func acquireAccessToken(clientID string, tenantID string, url string) {
 	cobra.CheckErr(err)
 	viper.SetConfigFile(home + "/" + "azb.yml")
 	viper.SetConfigType("yaml")
-	viper.Set("Token", result.AccessToken)
-	viper.Set("Server", url)
+	viper.Set("token", result.AccessToken)
+	viper.Set("server", url)
+	viper.Set("scheme", url)
 	if err := viper.WriteConfig(); err != nil {
 		fmt.Println(err)
 

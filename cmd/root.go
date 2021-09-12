@@ -12,6 +12,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/kataras/tablewriter"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -23,6 +24,7 @@ import (
 
 var cfgFile string
 var output string
+var envPrefix string = "AZB"
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -44,8 +46,8 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.azb-cli.yaml)")
 	rootCmd.PersistentFlags().StringVar(&output, "output", "json", "Use json, table, tsv or none to format CLI output")
-
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	_ = viper.BindPFlag("output", rootCmd.Flags().Lookup("output"))
+	_ = rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	cobra.AddTemplateFunc("StyleHeading", color.New(color.FgCyan).SprintFunc())
 	usageTemplate := rootCmd.UsageTemplate()
@@ -71,17 +73,21 @@ func initConfig() {
 		home, err := homedir.Dir()
 		cobra.CheckErr(err)
 
-		// Search config in home directory with name ".azb-cli" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".azb-cli")
+		viper.SetConfigName(".azbcli")
 	}
 
+	viper.SetEnvPrefix(envPrefix)
+	_ = viper.BindEnv("workspace-id", "AZB_WORKSPACE_ID")
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
+
+	postInitCommands(rootCmd.Commands())
+
 }
 
 func newClient() apiclient.Client {
@@ -94,11 +100,14 @@ func newClient() apiclient.Client {
 	if err != nil {
 		panic(fmt.Errorf("Fatal error config file: %w \n", err))
 	}
-	url := viper.Get("Server").(string)
-	token := viper.Get("Token").(string)
+	url := viper.Get("server").(string)
+	scheme := viper.Get("scheme").(string)
+	path := viper.Get("path").(string)
+	token := viper.Get("token").(string)
 	baseUrl := &neturl.URL{
-		Scheme: "http",
+		Scheme: scheme,
 		Host:   url,
+		Path:   path,
 	}
 	client := apiclient.NewClient(&http.Client{}, token, baseUrl)
 	return *client
@@ -171,4 +180,22 @@ func splitInterface(input interface{}) ([][]string, []string) {
 
 	}
 	return result, headers
+}
+
+func postInitCommands(commands []*cobra.Command) {
+	for _, cmd := range commands {
+		presetRequiredFlags(cmd)
+		if cmd.HasSubCommands() {
+			postInitCommands(cmd.Commands())
+		}
+	}
+}
+
+func presetRequiredFlags(cmd *cobra.Command) {
+	_ = viper.BindPFlags(cmd.Flags())
+	cmd.Flags().VisitAll(func(f *pflag.Flag) {
+		if viper.IsSet(f.Name) && viper.GetString(f.Name) != "" {
+			_ = cmd.Flags().Set(f.Name, viper.GetString(f.Name))
+		}
+	})
 }
