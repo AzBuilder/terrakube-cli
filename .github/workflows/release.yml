@@ -21,7 +21,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goos: ${{ matrix.goos }}
         goarch: ${{ matrix.goarch }}
-        binary_name: "azb"
+        binary_name: "terrakube"
   homebrew:
     needs: releases-matrix
     name: Bump Homebrew formula
@@ -29,9 +29,9 @@ jobs:
     steps:
       - uses: mislav/bump-homebrew-formula-action@v1
         with:
-          formula-name: azb
+          formula-name: terrakube
           homebrew-tap: azbuilder/homebrew-cli
-          download-url: https://github.com/azbuilder/azb-cli/releases/download/${{ github.event.release.tag_name }}/azb-${{ github.event.release.tag_name }}-darwin-amd64.tar.gz
+          download-url: https://github.com/azbuilder/terrakube-cli/releases/download/${{ github.event.release.tag_name }}/terrakube-${{ github.event.release.tag_name }}-darwin-amd64.tar.gz
           commit-message: |
             Updated {{formulaName}} to {{version}}
         env:

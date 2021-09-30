@@ -17,21 +17,21 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 
-	apiclient "azb/client/client"
+	apiclient "terrakube/client/client"
 	"net/http"
 	neturl "net/url"
 )
 
 var cfgFile string
 var output string
-var envPrefix string = "AZB"
+var envPrefix string = "TERRAKUBE"
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "azb",
-	Short: "azb command line tool",
+	Use:   "terrakube",
+	Short: "terrakube command line tool",
 	Long: `
-azb is a CLI to handle remote terraform workspace and modules in organizations 
+terrakube is a CLI to handle remote terraform workspace and modules in organizations 
 and handle all the lifecycle (plan, apply, destroy).`,
 }
 
@@ -44,7 +44,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.azb-cli.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.terrakube-cli.yaml)")
 	rootCmd.PersistentFlags().StringVar(&output, "output", "json", "Use json, table, tsv or none to format CLI output")
 	_ = viper.BindPFlag("output", rootCmd.Flags().Lookup("output"))
 	_ = rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
@@ -74,11 +74,11 @@ func initConfig() {
 		cobra.CheckErr(err)
 
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".azbcli")
+		viper.SetConfigName(".terrakube")
 	}
 
 	viper.SetEnvPrefix(envPrefix)
-	_ = viper.BindEnv("workspace-id", "AZB_WORKSPACE_ID")
+	_ = viper.BindEnv("workspace-id", "TERRAKUBE_WORKSPACE_ID")
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
@@ -94,7 +94,7 @@ func newClient() apiclient.Client {
 	home, err := homedir.Dir()
 	cobra.CheckErr(err)
 	viper.AddConfigPath(home)
-	viper.SetConfigName("azb.yml")
+	viper.SetConfigName("terrakube.yml")
 	viper.SetConfigType("yaml")
 	err = viper.ReadInConfig()
 	if err != nil {

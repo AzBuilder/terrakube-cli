@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"azb/client/models"
+	"terrakube/client/models"
 	"fmt"
 
 	"github.com/spf13/cobra"

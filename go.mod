@@ -1,4 +1,4 @@
-module azb
+module terrakube
 
 go 1.16
 

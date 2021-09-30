@@ -14,11 +14,11 @@ import (
 )
 
 const loginLong = `
-Authenticate to a remote azb server.
+Authenticate to a remote Terrakube server.
 `
 
 var loginExamples = `
-Login to a local azb server 
+Login to a local Terrakube server 
   %v login -s localhost:8080 -c 853b26d6-1849-4c00-8543-da5805b0e593 -t 0e6427af-ab9e-4af6-9f6f-bc098f470d75
 `
 
@@ -30,7 +30,7 @@ var Scheme string
 
 var loginCmd = &cobra.Command{
 	Use:   "login",
-	Short: "login to azb server",
+	Short: "login to Terrakube server",
 	Long:  loginLong,
 	Run: func(cmd *cobra.Command, args []string) {
 		acquireAccessToken(ClientID, TenantID, Server, Scheme, Path)
@@ -40,18 +40,18 @@ var loginCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(loginCmd)
-	loginCmd.Flags().StringVarP(&Server, "server", "s", "", "AZB Server url (required)")
+	loginCmd.Flags().StringVarP(&Server, "server", "s", "", "Terrakube Server url (required)")
 	_ = loginCmd.MarkFlagRequired("server")
 	_ = viper.BindEnv("server")
 	loginCmd.Flags().StringVarP(&ClientID, "client-id", "c", "", "Azure application Client id (required)")
 	_ = loginCmd.MarkFlagRequired("client-id")
-	_ = viper.BindEnv("client-id", "AZB_CLIENT_ID")
+	_ = viper.BindEnv("client-id", "TERRAKUBE_CLIENT_ID")
 	loginCmd.Flags().StringVarP(&TenantID, "tenant-id", "t", "", "Azure tenant Id (required)")
 	_ = loginCmd.MarkFlagRequired("tenant-id")
-	_ = viper.BindEnv("tenant-id", "AZB_TENANT_ID")
-	loginCmd.Flags().StringVarP(&Path, "path", "p", "", "AZB Server path")
+	_ = viper.BindEnv("tenant-id", "TERRAKUBE_TENANT_ID")
+	loginCmd.Flags().StringVarP(&Path, "path", "p", "", "Terrakube Server path")
 	_ = viper.BindEnv("path")
-	loginCmd.Flags().StringVarP(&Scheme, "scheme", "", "http", "AZB Server scheme: http or https")
+	loginCmd.Flags().StringVarP(&Scheme, "scheme", "", "http", "Terrakube Server scheme: http or https")
 	_ = viper.BindEnv("scheme")
 }
 
@@ -76,7 +76,7 @@ func acquireAccessToken(clientID string, tenantID string, url string, scheme str
 
 	home, err := homedir.Dir()
 	cobra.CheckErr(err)
-	viper.SetConfigFile(home + "/" + "azb.yml")
+	viper.SetConfigFile(home + "/" + "terrakube.yml")
 	viper.SetConfigType("yaml")
 	viper.Set("token", result.AccessToken)
 	viper.Set("server", url)
