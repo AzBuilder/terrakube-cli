@@ -21,7 +21,7 @@ If anything feels off, or if you feel that some functionality is missing, please
 
 | Install:          | Upgrade:          |
 | ----------------- | ----------------- |
-| `brew install terrakube/cli/terrakube` | `brew upgrade terrakube` |
+| `brew install azbuilder/cli/terrakube` | `brew upgrade terrakube` |
 
 
 ### Linux
