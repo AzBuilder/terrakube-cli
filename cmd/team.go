@@ -13,7 +13,7 @@ It can be used to create, update, delete and list teams.
 var teamCmd = &cobra.Command{
 	Use:   "team create|update|delete|list [ARGS]",
 	Short: "create, update, delete and list teams",
-	Long:  moduleLong,
+	Long:  teamLong,
 }
 
 func init() {
