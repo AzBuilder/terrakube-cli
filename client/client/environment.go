@@ -1,7 +1,7 @@
 package client
 
 import (
-	"azb/client/models"
+	"terrakube/client/models"
 	"fmt"
 	"net/http"
 )

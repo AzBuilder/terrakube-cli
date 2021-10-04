@@ -33,5 +33,5 @@ var moduleCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(moduleCmd)
-	_ = viper.BindEnv("organization-id", "AZB_ORGANIZATION_ID")
+	_ = viper.BindEnv("organization-id", "TERRAKUBE_ORGANIZATION_ID")
 }
