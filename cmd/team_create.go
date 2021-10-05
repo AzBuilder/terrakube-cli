@@ -8,7 +8,7 @@ import (
 )
 
 var TeamCreateExample string = `Create a new Team
-    %[1]v team create --organization-id e5ad0642-f9b3-48b3-9bf4-35997febe1fb -n AZB_USER --manage-workspace true --manage-module true --manage-provider true`
+    %[1]v team create --organization-id e5ad0642-f9b3-48b3-9bf4-35997febe1fb -n AZB_USER --manage-workspace=true --manage-module=true --manage-provider=true`
 
 var TeamCreateName string
 var TeamCreateOrgId string

@@ -26,9 +26,10 @@ It can be used to create, update, delete and list modules.
 `
 
 var moduleCmd = &cobra.Command{
-	Use:   "module create|update|delete|list [ARGS]",
-	Short: "create, update, delete and list modules",
-	Long:  moduleLong,
+	Use:     "module create|update|delete|list [ARGS]",
+	Short:   "create, update, delete and list modules",
+	Long:    moduleLong,
+	Aliases: []string{"mod"},
 }
 
 func init() {

@@ -1,17 +1,21 @@
 package cmd
 
 import (
-	"terrakube/client/models"
 	"fmt"
+	"terrakube/client/models"
 
 	"github.com/spf13/cobra"
 )
 
 var VariableCreateExample string = `Create a new variable
-    %[1]v workspace variable create --organization-id e5ad0642-f9b3-48b3-9bf4-35997febe1fb -w 38b6635a-d38e-46f2-a95e-d00a416de4fd -k tag_name -v "Hola mundo" `
+    %[1]v workspace variable create --organization-id e5ad0642-f9b3-48b3-9bf4-35997febe1fb -w 38b6635a-d38e-46f2-a95e-d00a416de4fd -k tag_name -v "Hola mundo" --hcl=false --sensitive=false --category TERRAFORM `
 
 var VariableCreateKey string
 var VariableCreateValue string
+var VariableCreateDescription string
+var VariableCreateCategory string
+var VariableCreateSensitive bool
+var VariableCreateHcl bool
 var VariableCreateOrgId string
 var VariableCreateWorkspaceId string
 
@@ -32,6 +36,13 @@ func init() {
 	_ = createVariableCmd.MarkFlagRequired("organization-id")
 	createVariableCmd.Flags().StringVarP(&VariableCreateValue, "value", "v", "", "Value for the new variable")
 	_ = createVariableCmd.MarkFlagRequired("value")
+	createVariableCmd.Flags().StringVarP(&VariableCreateDescription, "description", "d", "", "Description of the new variable")
+	createVariableCmd.Flags().StringVarP(&VariableCreateCategory, "category", "c", "", "Category of the new variable. Valid values are TERRAFORM or ENV")
+	_ = createVariableCmd.MarkFlagRequired("category")
+	createVariableCmd.Flags().BoolVarP(&VariableCreateSensitive, "sensitive", "s", false, "Whether the value is sensitive. If true then the variable is written once and not visible thereafter.")
+	_ = createVariableCmd.MarkFlagRequired("sensitive")
+	createVariableCmd.Flags().BoolVarP(&VariableCreateHcl, "hcl", "", false, "Whether to evaluate the value of the variable as a string of HCL code. Has no effect for environment variables.")
+	_ = createVariableCmd.MarkFlagRequired("hcl")
 	createVariableCmd.Flags().StringVarP(&VariableCreateWorkspaceId, "workspace-id", "w", "", "Workspace Id (required)")
 	_ = createVariableCmd.MarkFlagRequired("workspace-id")
 }
@@ -41,8 +52,12 @@ func createVariable() {
 
 	variable := models.Variable{
 		Attributes: &models.VariableAttributes{
-			Key:   VariableCreateKey,
-			Value: VariableCreateValue,
+			Key:         VariableCreateKey,
+			Value:       VariableCreateValue,
+			Description: VariableCreateDescription,
+			Sensitive:   VariableCreateSensitive,
+			Hcl:         VariableCreateHcl,
+			Category:    VariableCreateCategory,
 		},
 		Type: "variable",
 	}

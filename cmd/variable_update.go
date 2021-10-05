@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"terrakube/client/models"
 	"fmt"
+	"terrakube/client/models"
 
 	"github.com/spf13/cobra"
 )
@@ -13,6 +13,10 @@ var VariableUpdateExample string = `Update the value of the variable using id
 var VariableId string
 var VariableUpdateKey string
 var VariableUpdateValue string
+var VariableUpdateDescription string
+var VariableUpdateCategory string
+var VariableUpdateSensitive bool
+var VariableUpdateHcl bool
 var VariableUpdateOrgId string
 var VariableUpdateWorkspaceId string
 
@@ -31,11 +35,15 @@ func init() {
 	updateVariableCmd.Flags().StringVarP(&VariableId, "id", "", "", "Id of the variable (required)")
 	_ = updateVariableCmd.MarkFlagRequired("id")
 	updateVariableCmd.Flags().StringVarP(&VariableUpdateKey, "key", "k", "", "Key of the variable")
-	updateVariableCmd.Flags().StringVarP(&VariableUpdateValue, "value", "d", "", "Value of the variable")
+	updateVariableCmd.Flags().StringVarP(&VariableUpdateValue, "value", "v", "", "Value of the variable")
 	updateVariableCmd.Flags().StringVarP(&VariableUpdateOrgId, "organization-id", "", "", "Organization Id (required)")
 	_ = updateVariableCmd.MarkFlagRequired("organization-id")
 	updateVariableCmd.Flags().StringVarP(&VariableUpdateWorkspaceId, "workspace-id", "w", "", "Workspace Id (required)")
 	_ = updateVariableCmd.MarkFlagRequired("workspace-id")
+	updateVariableCmd.Flags().StringVarP(&VariableUpdateDescription, "description", "d", "", "Description of the variable")
+	updateVariableCmd.Flags().StringVarP(&VariableUpdateCategory, "category", "c", "", "Category of the variable. Valid values are TERRAFORM or ENV")
+	updateVariableCmd.Flags().BoolVarP(&VariableUpdateSensitive, "sensitive", "s", false, "Whether the value is sensitive. If true then the variable is written once and not visible thereafter.")
+	updateVariableCmd.Flags().BoolVarP(&VariableUpdateHcl, "hcl", "", false, "Whether to evaluate the value of the variable as a string of HCL code. Has no effect for environment variables.")
 
 }
 
@@ -44,8 +52,12 @@ func updateVariable() {
 
 	variable := models.Variable{
 		Attributes: &models.VariableAttributes{
-			Key:   VariableUpdateKey,
-			Value: VariableUpdateValue,
+			Key:         VariableUpdateKey,
+			Value:       VariableUpdateValue,
+			Description: VariableUpdateDescription,
+			Sensitive:   VariableUpdateSensitive,
+			Hcl:         VariableUpdateHcl,
+			Category:    VariableUpdateCategory,
 		},
 		ID:   VariableId,
 		Type: "variable",
