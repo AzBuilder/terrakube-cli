@@ -33,6 +33,18 @@ type VariableAttributes struct {
 
 	// value
 	Value string `json:"value,omitempty"`
+
+	// description
+	Description string `json:"description,omitempty"`
+
+	// category
+	Category string `json:"category,omitempty"`
+
+	// sensitive
+	Sensitive bool `json:"sensitive,omitempty"`
+
+	// hcl
+	Hcl bool `json:"hcl,omitempty"`
 }
 
 type VariableRelationships struct {

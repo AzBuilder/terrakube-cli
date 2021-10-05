@@ -10,9 +10,10 @@ It can be used to create, update, delete and list workspaces.
 `
 
 var workspaceCmd = &cobra.Command{
-	Use:   "workspace create|update|delete|list [ARGS]",
-	Short: "create, update, delete and list workspaces",
-	Long:  workspaceLong,
+	Use:     "workspace create|update|delete|list [ARGS]",
+	Short:   "create, update, delete and list workspaces",
+	Long:    workspaceLong,
+	Aliases: []string{"wrk"},
 }
 
 func init() {
