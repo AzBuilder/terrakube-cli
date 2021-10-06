@@ -43,6 +43,12 @@ type ModuleAttributes struct {
 
 	// sourceSample
 	SourceSample string `json:"sourceSample,omitempty"`
+
+	// registryPath
+	RegistryPath string `json:"registryPath,omitempty"`
+
+	// versions
+	Versions []string `json:"versions,omitempty"`
 }
 
 type ModuleRelationships struct {
