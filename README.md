@@ -1,7 +1,7 @@
 # Terrakube CLI
 `terrakube` is Terrakube Server on the command line. It brings organizations, workspaces and other Terrakube concepts to the terminal.
 
-<img src='https://svgshare.com/i/Z3P.svg' title='Terrakube CLI' />
+<img src='https://svgshare.com/i/aw1.svg' title='Terrakube CLI' />
 
 ## Documentation
 
