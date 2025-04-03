@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/google/jsonapi"
 )
@@ -78,6 +79,17 @@ func NewClient(httpClient *http.Client, token string, baseUrl *url.URL) *Client 
 	c.Team = &TeamClient{Client: c}
 	c.Secret = &SecretClient{Client: c}
 	c.Job = &JobClient{Client: c}
-	c.BasePath = baseUrl.Path + defaultPath
+
+	// Handle base path
+	if baseUrl.Path == "" {
+		c.BasePath = defaultPath
+	} else {
+		c.BasePath = baseUrl.Path
+		if !strings.HasSuffix(c.BasePath, "/") {
+			c.BasePath += "/"
+		}
+		c.BasePath += defaultPath
+	}
+
 	return c
 }

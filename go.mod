@@ -3,7 +3,6 @@ module terrakube
 go 1.16
 
 require (
-	github.com/AzureAD/microsoft-authentication-library-for-go v0.3.0
 	github.com/fatih/color v1.12.0
 	github.com/google/jsonapi v1.0.0
 	github.com/kataras/tablewriter v0.0.0-20180708051242-e063d29b7c23
