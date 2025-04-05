@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net/url"
 	"os"
+	"path/filepath"
 	"reflect"
 	"regexp"
 	"strings"
@@ -14,12 +16,9 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 
-	apiclient "terrakube/client/client"
-	"net/http"
-	neturl "net/url"
+	"terrakube/client/client"
 )
 
 var cfgFile string
@@ -66,15 +65,13 @@ func init() {
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if cfgFile != "" {
-		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
+		home, err := os.UserHomeDir()
 		cobra.CheckErr(err)
 
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".terrakube")
+		configFile := filepath.Join(home, ".terrakube-cli.yaml")
+		viper.SetConfigFile(configFile)
 	}
 
 	viper.SetEnvPrefix(envPrefix)
@@ -87,30 +84,16 @@ func initConfig() {
 	}
 
 	postInitCommands(rootCmd.Commands())
-
 }
 
-func newClient() apiclient.Client {
-	home, err := homedir.Dir()
-	cobra.CheckErr(err)
-	viper.AddConfigPath(home)
-	viper.SetConfigName("terrakube.yml")
-	viper.SetConfigType("yaml")
-	err = viper.ReadInConfig()
+func newClient() *client.Client {
+	baseURL, err := url.Parse(viper.GetString("api_url"))
 	if err != nil {
-		panic(fmt.Errorf("Fatal error config file: %w \n", err))
+		fmt.Printf("Error parsing API URL: %v\n", err)
+		os.Exit(1)
 	}
-	url := viper.Get("server").(string)
-	scheme := viper.Get("scheme").(string)
-	path := viper.Get("path").(string)
-	token := viper.Get("token").(string)
-	baseUrl := &neturl.URL{
-		Scheme: scheme,
-		Host:   url,
-		Path:   path,
-	}
-	client := apiclient.NewClient(&http.Client{}, token, baseUrl)
-	return *client
+
+	return client.NewClient(nil, viper.GetString("token"), baseURL)
 }
 
 func renderOutput(result interface{}, format string) {
