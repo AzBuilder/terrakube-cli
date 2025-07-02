@@ -8,7 +8,7 @@ import (
 )
 
 var WorkspaceCreateExample string = `Create a new workspace
-    %[1]v workspace create --organization-id 312b4415-806b-47a9-9452-b71f0753136e -n myWorkspace -s https://github.com/AzBuilder/terraform-sample-repository.git -b master -t 0.15.0`
+    %[1]v workspace create --organization-id 312b4415-806b-47a9-9452-b71f0753136e -n myWorkspace -s https://github.com/terrakube-io/terraform-sample-repository.git -b master -t 0.15.0`
 
 var WorkspaceCreateName string
 var WorkspaceCreateSource string
