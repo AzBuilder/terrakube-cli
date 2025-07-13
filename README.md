@@ -20,7 +20,7 @@ If anything feels off, or if you feel that some functionality is missing, please
 
 | Install:          | Upgrade:          |
 | ----------------- | ----------------- |
-| `brew install azbuilder/cli/terrakube` | `brew upgrade terrakube` |
+| `brew install terrakube-io/cli/terrakube` | `brew upgrade terrakube` |
 
 
 ### Linux
@@ -48,6 +48,6 @@ See here on how to [build Terrakube CLI from source][build from source].
 [manual]: https://terrakube.gitbook.io/terrakube/cli/install
 [Homebrew]: https://brew.sh
 [Chocolatey]: https://chocolatey.org
-[releases page]: https://github.com/azbuilder/terrakube-cli/releases/latest
+[releases page]: https://github.com/terrakube-io/terrakube-cli/releases/latest
 [contributing]: ./.github/CONTRIBUTING.md
 [build from source]: ./docs/source.md
